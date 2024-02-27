@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monopole Antenna Designer</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    #antenna-designer {
+        width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    label {
+        margin-bottom: 5px;
+        display: block;
+    }
+    input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+    button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+
+<div id="antenna-designer">
+    <h2>Monopole Antenna Designer</h2>
+    <label for="frequency">Enter Frequency:</label>
+    <input type="number" id="frequency" placeholder="Frequency" min="1">
+    <label for="unit">Select Unit:</label>
+    <select id="unit">
+        <option value="Hz">Hz</option>
+        <option value="kHz">kHz</option>
+        <option value="MHz">MHz</option>
+        <option value="GHz">GHz</option>
+    </select>
+    <label for="wire-radius">Enter Wire Radius (mm):</label>
+    <input type="number" id="wire-radius" placeholder="Wire Radius" min="0.001" step="0.001" max="0.1">
+    <button onclick="calculateAntenna()">Calculate</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    function calculateAntenna() {
+        const freq = parseFloat(document.getElementById('frequency').value);
+        const unit = document.getElementById('unit').value;
+        const wireRadius = parseFloat(document.getElementById('wire-radius').value);
+        const c0 = 299792458.000176; // Speed of light in m/s
+
+        let lambda = c0 / (freq * getMultiplier(unit)); // Wavelength in meters
+        let length = lambda / 4 * 1000; // Length of monopole antenna in millimeters
+        let groundRadius = 0.6 * lambda * 1000; // Ground radius assumption based on typical practice
+        let majorAxis = groundRadius * 2; // Major axis of the ground plane
+        let minorAxis = groundRadius * 2; // Minor axis of the ground plane
+        let result = `Wavelength (λ): ${(lambda * 1000).toFixed(2)} mm<br>`;
+        result += `Length of monopole antenna: ${length.toFixed(2)} mm<br>`;
+        result += `Ground Radius: ${groundRadius.toFixed(2)} mm<br>`;
+        result += `Major Axis: ${majorAxis.toFixed(2)} mm<br>`;
+        result += `Minor Axis: ${minorAxis.toFixed(2)} mm<br>`;
+        result += `Wire Radius: ${wireRadius} mm`;
+
+        document.getElementById('result').innerHTML = result;
+    }
+
+    function getMultiplier(unit) {
+        switch (unit) {
+            case 'Hz':
+                return 1;
+            case 'kHz':
+                return 1e3;
+            case 'MHz':
+                return 1e6;
+            case 'GHz':
+                return 1e9;
+            default:
+                return 1;
+        }
+    }
+</script>
+
+</body>
+</html>

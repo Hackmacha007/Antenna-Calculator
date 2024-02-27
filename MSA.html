@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microstrip Patch Antenna Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    select, button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    #result {
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Microstrip Patch Antenna Calculator</h2>
+    <label for="frequency">Frequency:</label>
+    <input type="number" id="frequency" placeholder="Enter frequency" min="1" step="any">
+    <select id="frequencyUnit">
+        <option value="MHz">MHz</option>
+        <option value="GHz">GHz</option>
+    </select>
+    <label for="height">Height:</label>
+    <input type="number" id="height" placeholder="Enter height" min="1" step="any">
+    <select id="heightUnit">
+        <option value="mm">mm</option>
+        <option value="cm">cm</option>
+    </select>
+    <label for="epsilon">Dielectric Constant (εx):</label>
+    <input type="number" id="epsilon" placeholder="Enter dielectric constant" min="1" step="any">
+    <button onclick="calculate()">Calculate</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    function calculate() {
+        var frequency = parseFloat(document.getElementById('frequency').value);
+        var frequencyUnit = document.getElementById('frequencyUnit').value;
+        var height = parseFloat(document.getElementById('height').value);
+        var heightUnit = document.getElementById('heightUnit').value;
+        var epsilon = parseFloat(document.getElementById('epsilon').value);
+        var m = 1 ; var n = 0;
+        // Constants
+        var c = 299792458; // Speed of light in m/s
+
+        // Convert frequency to Hz if necessary
+        if (frequencyUnit === 'MHz') {
+            frequency *= 1e6;
+        } else if (frequencyUnit === 'GHz') {
+            frequency *= 1e9;
+        }
+
+        // Convert height to meters if necessary
+        if (heightUnit === 'mm') {
+            height /= 1000; // Convert mm to meters
+        } else if (heightUnit === 'cm') {
+            height /= 100; // Convert cm to meters
+        }
+
+        // Calculations
+        var w = c / (2 * frequency * Math.sqrt((epsilon + 1) / 2));
+        var epsilon_e = (epsilon + 1) / 2 + (epsilon - 1) / 2 *Math.pow( Math.sqrt(1 + 10 * height / w) , -1/2 );
+        var Le = c / (2 * frequency * Math.sqrt(epsilon_e));
+        var deltaL = height / Math.sqrt(epsilon_e);
+        var L = Le - 2 * deltaL;
+        var fo = c / (2 * Math.sqrt(epsilon_e)) * Math.sqrt(Math.pow((m / L), 2) + Math.pow((n / w), 2));
+
+        // Output
+        document.getElementById('result').innerHTML = `
+            <p>Patch Width (w): ${w.toFixed(2)} m</p>
+            <p>Effective Dielectric Constant (εe): ${epsilon_e.toFixed(2)}</p>
+            <p>Effective Length (Le): ${Le.toFixed(2)} m</p>
+            <p>Delta Length: ${deltaL.toFixed(2)} m</p>
+            <p>Length (L): ${L.toFixed(2)} m</p>
+            <p>Resonant Frequency (fo): ${fo.toFixed(2)} Hz</p>
+        `;
+    }
+</script>
+</body>
+</html>

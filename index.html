@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator Selection</title>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      background-color: transparent;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300%;
+      height: 300%;
+      background-color: #f00;
+      transition: width 0.5s ease-out, height 0.5s ease-out, top 0.5s ease-out, left 0.5s ease-out;
+      border-radius: 50%;
+      z-index: 0;
+      transform: translate(-50%, -50%);
+    }
+
+    button:hover::before {
+      width: 0;
+      height: 0;
+      top: 50%;
+      left: 50%;
+    }
+
+    button span {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Neon Colors */
+    .neon-red::before {
+      background-color: #ff0000;
+    }
+
+    .neon-green::before {
+      background-color: #00ff00;
+    }
+
+    .neon-blue::before {
+      background-color: #0000ff;
+    }
+
+    .neon-purple::before {
+      background-color: #ff00ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="neon-red" onclick="redirectTo('wavelength.html')"><span>Wavelength Calculator</span></button>
+    <button class="neon-green" onclick="redirectTo('monopole.html')"><span>Monopole Calculator</span></button>
+    <button class="neon-blue" onclick="redirectTo('Dipole.html')"><span>Dipole Calculator</span></button>
+    <button class="neon-purple" onclick="redirectTo('MSA.html')"><span>Patch Calculator</span></button>
+  </div>
+  <script>
+    function redirectTo(page) {
+      window.location.href = page;
+    }
+  </script>
+</body>
+</html>
